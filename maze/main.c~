@@ -1,0 +1,19 @@
+#include <msp430.h>
+#include <libTimer.h>
+#include "lcdutils.h"
+#include "lcddraw.h"
+
+int main() {
+  configureClocks();
+  lcd_init();
+  createMaze();
+}
+
+u_char width = screenWidth, height = screenHeight;
+void createMaze() {
+  clearScreen(COLOR_BLACK);
+  fillRectangle(0,0,width,5,COLOR_WHITE);
+  fillRectangle(0,0,5,height,COLOR_WHITE);
+  fillRectangle(0,(height-5),width,5,COLOR_WHITE);
+  fillRectangle((width-5),0,5,height,COLOR_WHITE);
+}
