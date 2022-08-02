@@ -1,33 +1,23 @@
 
 CPU	       = msp430g2553
 CFLAGS	       = -mmcu=${CPU} -Os -I../h
-LDFLAGS        = -L/opt/ti/msp430_gcc/include -L../lib
+LDFLAGS        = -L../lib -L/opt/ti/msp430_gcc/include/
 
 CC	       = msp430-elf-gcc
 AS             = msp430-elf-as
 
-all: libLcd.a project3-c.elf
+all: project3-c.elf
 
-libLcd.a:lcdutils.o lcddraw.o
-	$(AR) crs $@ $^
-lcddraw.o: lcddraw.c lcddraw.h lcdutils.h
-lcdutils.o: lcdutils.c lcdutils.h
+project3-c.elf: ${COMMON_OBJECTS} main.o buzzer.o
 
-install: libLcd.a
-	mkdir -p ../h ./lib
-	mv $^ ../lib
-	cp *.h ../h
-
-project3-c.elf: ${COMMON_OBJECTS} main.o libLcd.a
-
-	${CC} ${CFLAGS} ${LDFLAGS} -o $@ $^ -lTimer
+	${CC} ${CFLAGS} ${LDFLAGS} -o $@ $^ -lTimer -lLcd
 
 
 project3-s.elf: ${COMMON_OBJECTS}../lib/libTimer.a
 
 	${CC} ${CFLAGS} ${LDFLAGS} -o $@ $^
 
-
+buzzer.o: buzzer.h
 
 load-c: project3-c.elf
 	msp430loader.sh $^
