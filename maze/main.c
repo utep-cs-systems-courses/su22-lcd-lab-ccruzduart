@@ -52,8 +52,8 @@ int secondCount2 = 0;
 void movement() {
   int buzzerCount = 0;
   while(~switch_update_interrupt_sense() & switchDown){
-    secondCount2++;
-    if (playerX >= 15 && playerX <= 25 && playerY >= 134 && playerY <= 140 ) {
+    secondCount2++;                                  //if button if being press keep count
+    if (playerX >= 15 && playerX <= 25 && playerY >= 134 && playerY <= 140 ) {  //player reach goal
       scoreCount ++;
       scoreUpdate();
       buzzer_set_period(3500);
@@ -64,12 +64,12 @@ void movement() {
       playerY = 23;
       createMaze();
     }
-    if(switchDown == 1 && secondCount2 >= 3500) {
+    if(switchDown == 1 && secondCount2 >= 3500) {                    //botton 1 is being press
       if(playerX <= 6){
 	switchDown = 0;
 	secondCount2 = 0;
       }
-      else if((playerY >= 25 && playerY <= 35 && playerX <= 109) ||
+      else if((playerY >= 25 && playerY <= 35 && playerX <= 109) ||       //collitions
 	      (playerY >= 55 && playerY <= 65 && playerX <= 109) ||
 	      (playerY >= 85 && playerY <= 95 && playerX <= 109) ||
 	      (playerY >= 116 && playerY <= 142 && playerX <= 115 && playerX >= 110) ||
@@ -81,28 +81,30 @@ void movement() {
 	switchDown = 0;
 	secondCount2 = 0;
       }
-      else {
+      else {                                                      // move player left
 	erasePlayer();
 	playerX -= 1;
 	drawPlayer();
 	secondCount2 = 0;
 	if(((playerX >= 44 && playerX <= 46) && (playerY >= 36 && playerY <= 39)) ||
 	   ((playerX >= 29 && playerX <= 31) && (playerY >= 96 && playerY <= 99))){
-	  buzzerCount++;
-	  if(buzzerCount >= 3) {
+	  buzzerCount++;                                   //player reach a coin
+	  if(buzzerCount >= 3) { 
 	    buzzerOff();
 	    scoreCount++;
 	    scoreUpdate();
+	    if(playerX >= 44 && playerX <= 46 && playerY >= 36 && playerY <= 39) fillRectangle(45,38,5,5,COLOR_NAVY);
+	    else if (playerX >= 29 && playerX <= 31 && playerY >= 96 && playerY <= 99)fillRectangle(30,98,5,5,COLOR_NAVY);
 	  }
 	  else buzzer_set_period(5500);
 	  secondCount2 = 0;
 	}
       }
-    } else if(switchDown == 2 && secondCount2 >= 3500) {
+    } else if(switchDown == 2 && secondCount2 >= 3500) {          // button 2 is being press
       if(playerY >= 149){
 	switchDown = 0;
 	secondCount2 = 0;
-      } else if ((playerX <= 108 && playerY <= 29) ||
+      } else if ((playerX <= 108 && playerY <= 29) ||               //collitions
 		 (playerX >= 20 && playerY <= 44 && playerY >= 39) ||
 		 (playerX <= 108 && playerY <= 59 && playerY >= 54) ||
 		 (playerX >= 20 && playerY <= 74 && playerY >= 69) ||
@@ -114,17 +116,17 @@ void movement() {
 		 (playerX <= 40 && playerX >= 29 && playerY <= 135)) {
 	switchDown = 0;
 	secondCount2 = 0;
-      } else {
+      } else {                                               // move player down
 	erasePlayer();
 	playerY += 1;
 	drawPlayer();
 	secondCount2 = 0;
       }
-    } else if(switchDown == 4 && secondCount2 >= 3500) {
+    } else if(switchDown == 4 && secondCount2 >= 3500) {    // button 4 is being press             
       if(playerY <= 21) {
 	switchDown = 0;
 	secondCount2 = 0;
-      } else if ((playerX <= 108 && playerY <= 36) ||
+      } else if ((playerX <= 108 && playerY <= 36) ||               // collitions
 		 (playerX >= 20 && playerY <= 51 && playerY >= 46) ||
 		 (playerX <= 108 && playerY <= 66 && playerY >= 61) ||
 		 (playerX >= 20 && playerY <= 81 && playerY >= 76) ||
@@ -136,17 +138,17 @@ void movement() {
 		 (playerX >= 44 && playerX <= 55 && playerY >= 140)) {
 	switchDown = 0;
 	secondCount2 = 0;
-      } else {
+      } else {                                                  // move player up
 	erasePlayer();
 	playerY -= 1;
 	drawPlayer();
 	secondCount2 = 0;
       }
-    } else if(switchDown == 8 && secondCount2 >= 3500) {
+    } else if(switchDown == 8 && secondCount2 >= 3500) {             // button 4 is being press
       if(playerX >= 117) {
 	switchDown = 0;
-	secondCount2 = 0;
-      } else if ((playerY >= 40 && playerY <= 49 && playerX <= 21) ||
+	secondCount2 = 0;   
+      } else if ((playerY >= 40 && playerY <= 49 && playerX <= 21) ||          // collitions
 		 (playerY >= 70 && playerY <= 79 && playerX <= 21) ||
 		 (playerY >= 101 && playerY <= 110 && playerX <= 21) ||
 		 (playerY >= 116 && playerY <= 142 && playerX <= 115 && playerX >= 110) ||
@@ -157,18 +159,19 @@ void movement() {
 		 (playerY >= 135 && playerX <=40 && playerX >= 35)) {
 	switchDown = 0;
 	secondCount2 = 0;
-      } else {
+      } else {                                                    // move player right
 	erasePlayer();
 	playerX += 1;
 	drawPlayer();
 	secondCount2 = 0;
 	if ((playerX >= 49 && playerX <= 51) && (playerY >= 22 && playerY <= 24)) {
-	  secondCount2 = 0;
+	  secondCount2 = 0;                                     // player reach a coin
 	  buzzerCount++;
 	  if(buzzerCount >= 3) {
 	    buzzerOff();
 	    scoreCount++;
 	    scoreUpdate();
+	    fillRectangle(50,23,5,5,COLOR_NAVY);
 	  }
 	  else buzzer_set_period(5500);
 	  //buzzerOff();
@@ -197,12 +200,12 @@ void scoreUpdate() {
 u_char width = screenWidth, height = screenHeight;
 void createMaze() {                                     //Initialize the maze
   u_char mazeBar = width-20;                            
-  clearScreen(COLOR_NAVY);
-  fillRectangle(0,0,width,15,COLOR_BLACK);
+  clearScreen(COLOR_NAVY);                              // maze background
+  fillRectangle(0,0,width,15,COLOR_BLACK);              //score background
   drawPlayer();
-  fillRectangle(50,23,5,5,COLOR_YELLOW);
-  fillRectangle(45,38,5,5,COLOR_YELLOW);
-  fillRectangle(30,98,5,5,COLOR_YELLOW);
+  fillRectangle(50,23,5,5,COLOR_YELLOW);                //coin
+  fillRectangle(45,38,5,5,COLOR_YELLOW);                //coin
+  fillRectangle(30,98,5,5,COLOR_YELLOW);                //coin
   scoreUpdate();
   fillRectangle(0,15,width,5,COLOR_WHITE);              //top
   fillRectangle(0,15,5,height,COLOR_WHITE);             //left
